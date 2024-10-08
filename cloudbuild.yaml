@@ -1,0 +1,20 @@
+steps:
+# Build the container image
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/hostspace-demo:$COMMIT_SHA', '.']
+
+# Push the container image to Artifact Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/hostspace-demo:$COMMIT_SHA']
+
+# Create an additional tag for 'latest'
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['tag', 'gcr.io/$PROJECT_ID/hostspace-demo:$COMMIT_SHA', 'gcr.io/$PROJECT_ID/hostspace-demo:latest']
+
+# Push the 'latest' tag
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/hostspace-demo:latest']
+
+images:
+- 'gcr.io/$PROJECT_ID/hostspace-demo:$COMMIT_SHA'
+- 'gcr.io/$PROJECT_ID/hostspace-demo:latest'
